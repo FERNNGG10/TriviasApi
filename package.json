@@ -4,11 +4,30 @@
   "description": "Api de trivias para app pwa",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "nodemon --watch \"src/**/*.ts\" --exec \"npx ts-node -r tsconfig-paths/register\" src/server.ts",
+    "lint": "eslint 'src/**/*.ts'"
   },
   "author": "Fernando Olmos & Miguel Villalpando",
   "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.5.2",
+    "dotenv": "^17.2.2",
+    "eslint": "^9.35.0",
+    "express": "^5.1.0",
+    "install": "^0.13.0",
+    "nodemon": "^3.1.10",
+    "npm": "^11.6.0",
+    "prettier": "^3.6.2",
+    "prisma": "^6.16.2",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.2"
+  },
   "dependencies": {
-    "express": "^5.1.0"
+    "@prisma/client": "^6.16.2"
   }
 }
