@@ -4,12 +4,9 @@ import prisma from "@config/database";
 const router = Router();
 
 router.get("/", async (req, res) => {
-  try {
-    const users = await prisma.user.findMany();
-    res.json({ message: "Trivia Api with Prisma", users: users });
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
-  }
+  const roles = await prisma.role.findMany();
+  console.log(roles);
+  return res.json({ message: "API is running" });
 });
 
 export default router;
