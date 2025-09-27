@@ -33,6 +33,7 @@ model User {
   password   String?      @db.VarChar(255)
   roleId     Int
   role       Role         @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  status     Boolean      @default(true)
   createdAt  DateTime     @default(now())
   Quizzes    Quizzes[]
   QuizScores QuizScores[]

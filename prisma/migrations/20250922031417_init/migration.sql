@@ -13,6 +13,7 @@ CREATE TABLE "public"."User" (
     "providerId" VARCHAR(255),
     "password" VARCHAR(255),
     "roleId" INTEGER NOT NULL,
+    "status" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")

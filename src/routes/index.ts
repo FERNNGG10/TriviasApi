@@ -1,12 +1,12 @@
 import { Router } from "express";
 import prisma from "@config/database";
+import authRouter from "@routes/auth/auth.route";
+import adminRouter from "@routes/admin/users.route";
 
 const router = Router();
 
-router.get("/", async (req, res) => {
-  const roles = await prisma.role.findMany();
-  console.log(roles);
-  return res.json({ message: "API is running" });
-});
+router.use("/auth", authRouter);
+router.use("/admin", adminRouter);
+//router.use('/player',plaayerRouter);
 
 export default router;
