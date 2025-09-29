@@ -1,7 +1,6 @@
 import { Router } from "express";
-import prisma from "@config/database";
 import authRouter from "@routes/auth/auth.route";
-import adminRouter from "@routes/admin/users.route";
+import adminRouter from "@routes/admin/index.route";
 
 const router = Router();
 

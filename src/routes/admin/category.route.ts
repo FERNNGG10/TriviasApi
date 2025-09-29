@@ -4,21 +4,20 @@ import {
   getById,
   create,
   update,
-  softDelete,
-} from "@controllers/admin/user.controller";
-import {
-  createUserValidator,
-  updateUserValidator,
-} from "@validators/user.validator";
+} from "@controllers/admin/category.controller";
+
 import { authenticateJWT } from "@middlewares/auth.middleware";
 import { requireAdmin } from "@middlewares/role.middleware";
+import {
+  createCategoryValidator,
+  updateCategoryValidator,
+} from "@validators/category.validator";
 
 const router = Router();
 router.use(authenticateJWT, requireAdmin);
 router.get("/", getAll);
 router.get("/:id", getById);
-router.post("/", createUserValidator, create);
-router.patch("/:id", updateUserValidator, update);
-router.delete("/:id", softDelete);
+router.post("/", createCategoryValidator, create);
+router.patch("/:id", updateCategoryValidator, update);
 
 export default router;
