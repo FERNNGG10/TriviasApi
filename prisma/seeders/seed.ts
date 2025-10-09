@@ -1,40 +1,22 @@
-import { PrismaClient, RoleName } from "../../src/generated/prisma";
-import bcrypt from "bcryptjs";
+import { PrismaClient } from "../../src/generated/prisma";
+import { roleSeeder } from "./role.seeder";
+import { userSeeder } from "./user.seeder";
+import { categorySeeder } from "./category.seeder";
+import { quizzSeeder } from "./quizz.seeder";
+import { questionSeeder } from "./question.seeder";
+import { optionSeeder } from "./option.seeder";
+import { scoreSeeder } from "./score.seeder";
+
 const prisma = new PrismaClient();
 
 async function main() {
-  const roles = [RoleName.admin, RoleName.player];
-  for (const roleName of roles) {
-    await prisma.role.create({
-      data: { name: roleName },
-    });
-  }
-  const users = [
-    {
-      name: "Fernando Admin",
-      email: "fernando@gmail.com",
-      password: await bcrypt.hash("admin123", 10),
-      roleId: 1,
-      status: true,
-    },
-    {
-      name: "Miguel Admin",
-      email: "miguel@gmail.com",
-      password: await bcrypt.hash("admin123", 10),
-      roleId: 1,
-      status: true,
-    },
-  ];
-  for (const userData of users) {
-    await prisma.user.create({
-      data: {
-        name: userData.name,
-        email: userData.email,
-        password: userData.password,
-        roleId: userData.roleId,
-      },
-    });
-  }
+  await roleSeeder(prisma);
+  await userSeeder(prisma);
+  await categorySeeder(prisma);
+  await quizzSeeder(prisma);
+  await questionSeeder(prisma);
+  await optionSeeder(prisma);
+  await scoreSeeder(prisma);
 
   console.log("Seeding completed.");
 }

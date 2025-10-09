@@ -8,9 +8,36 @@ import {
   QuizzWithQuestionsAndAnswers,
 } from "@interfaces/quizz.interface";
 
-export const getAll = async (req: Request, res: Response) => {
+export const getAll = async (_: Request, res: Response) => {
   const quizzes = await prisma.quizzes.findMany({
     orderBy: { id: "asc" },
+  });
+  return res.status(200).json({ quizzes });
+};
+
+export const getAllWithQuestions = async (_: Request, res: Response) => {
+  const quizzes = await prisma.quizzes.findMany({
+    orderBy: { id: "asc" },
+    include: {
+      Question: true,
+    },
+  });
+  return res.status(200).json({ quizzes });
+};
+
+export const getAllWithQuestionsAndAnswers = async (
+  _: Request,
+  res: Response
+) => {
+  const quizzes = await prisma.quizzes.findMany({
+    orderBy: { id: "asc" },
+    include: {
+      Question: {
+        include: {
+          Options: true,
+        },
+      },
+    },
   });
   return res.status(200).json({ quizzes });
 };
@@ -19,6 +46,13 @@ export const getById = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const quizz = await prisma.quizzes.findUnique({
     where: { id },
+    include: {
+      Question: {
+        include: {
+          Options: true,
+        },
+      },
+    },
   });
   if (!quizz) {
     return res.status(404).json({ message: "Quizz not found" });
@@ -164,4 +198,23 @@ export const createQuizzWithQuestionsAndAnswers = async (
       message: "Failed to create quiz with questions and answers",
     });
   }
+};
+
+export const getQuizzByCategoryId = async (req: Request, res: Response) => {
+  const categoryId = Number(req.params.categoryId);
+  const quizzes = await prisma.quizzes.findMany({
+    orderBy: { id: "asc" },
+    where: { categoryId: categoryId },
+    include: {
+      Question: {
+        include: {
+          Options: true,
+        },
+      },
+    },
+  });
+  if (quizzes) {
+    return res.status(404).json({ message: "Quizz not found" });
+  }
+  return res.status(200).json({ quizzes });
 };

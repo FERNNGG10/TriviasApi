@@ -4,7 +4,7 @@ import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import { UserRequest, UserUpdate } from "@interfaces/user.interface";
 
-export const getAll = async (req: Request, res: Response) => {
+export const getAll = async (_: Request, res: Response) => {
   const users = await prisma.user.findMany({
     select: {
       id: true,

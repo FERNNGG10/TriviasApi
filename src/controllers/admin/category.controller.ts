@@ -6,7 +6,7 @@ import {
   CategoryUpdate,
 } from "@interfaces/category.interface";
 
-export const getAll = async (req: Request, res: Response) => {
+export const getAll = async (_: Request, res: Response) => {
   const categories = await prisma.category.findMany({
     orderBy: { id: "asc" },
   });

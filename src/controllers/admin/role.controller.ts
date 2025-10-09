@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "@config/database";
 
-export const getAll = async (req: Request, res: Response) => {
+export const getAll = async (_: Request, res: Response) => {
   const roles = await prisma.role.findMany({
     orderBy: { id: "asc" },
   });

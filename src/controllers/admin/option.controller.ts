@@ -3,7 +3,7 @@ import { validationResult } from "express-validator";
 import { OptionRequest, OptionUpdate } from "@interfaces/option.interface";
 import prisma from "@config/database";
 
-export const getAll = async (req: Request, res: Response) => {
+export const getAll = async (_: Request, res: Response) => {
   const options = await prisma.options.findMany({
     orderBy: { id: "asc" },
   });
@@ -50,4 +50,17 @@ export const update = async (req: Request, res: Response) => {
     data: optionData,
   });
   return res.status(200).json({ option });
+};
+
+export const getOptionsByQuestionId = async (req: Request, res: Response) => {
+  const questionId = Number(req.params.questionId);
+
+  const options = await prisma.options.findMany({
+    where: { id: questionId },
+    orderBy: { id: "asc" },
+  });
+  if (!options) {
+    return res.status(404).json({ message: "Options not found" });
+  }
+  return res.status(200).json({ options });
 };
