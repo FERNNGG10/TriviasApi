@@ -9,7 +9,7 @@
     // See also https://aka.ms/tsconfig/module
     "module": "commonjs",
     "target": "es5",
-    "types": [],
+    // "types": [], // REMOVED: This was blocking ALL type definitions including Express augmentations
     // For nodejs:
     "lib": ["ES2015", "DOM"],
     // "types": ["node"],
@@ -49,10 +49,14 @@
       "@middlewares/*": ["src/middlewares/*"],
       "@interfaces/*": ["src/interfaces/*"],
       "@services/*": ["src/services/*"],
-      "@validators/*": ["src/validators/*"]
+      "@validators/*": ["src/validators/*"],
+      "src/generated/prisma": ["src/generated/prisma"]
     }
 
   },
-  "include": ["src/**/*" ],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*", "src/types/**/*.d.ts" ],
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "files": true
+  }
 }

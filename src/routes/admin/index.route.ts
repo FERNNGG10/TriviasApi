@@ -4,6 +4,7 @@ import categoryRouter from "@routes/admin/category.route";
 import quizzRouter from "@routes/admin/quizz.route";
 import questionRouter from "@routes/admin/question.route";
 import optionRouter from "@routes/admin/option.route";
+import dashboardRouter from "@routes/admin/dashboard.route";
 import { Router } from "express";
 
 const router = Router();
@@ -13,5 +14,6 @@ router.use("/categories", categoryRouter);
 router.use("/quizzes", quizzRouter);
 router.use("/questions", questionRouter);
 router.use("/options", optionRouter);
+router.use("/dashboard", dashboardRouter);
 
 export default router;

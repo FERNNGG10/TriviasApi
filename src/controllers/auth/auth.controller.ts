@@ -61,7 +61,27 @@ export const loginController = async (req: Request, res: Response) => {
     process.env.JWT_SECRET!,
     { expiresIn: "2h" }
   );
-  return res.json({ message: "Authentication successful", accessToken });
+
+  // Obtener el usuario con el rol incluido
+  const userWithRole = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+
+  return res.json({
+    message: "Authentication successful",
+    token: accessToken,
+    user: userWithRole,
+  });
 };
 
 export const googleCallback = async (req: Request, res: Response) => {

@@ -1,9 +1,13 @@
-import { User } from "src/generated/prisma";
+import type { User as PrismaUser } from "../generated/prisma";
+
+declare module "express-serve-static-core" {
+  interface Request {
+    user?: PrismaUser;
+  }
+}
 
 declare global {
   namespace Express {
-    interface Request {
-      user?: User;
-    }
+    interface User extends PrismaUser {}
   }
 }

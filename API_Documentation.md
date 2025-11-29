@@ -3,6 +3,12 @@
 
 This document provides a detailed overview of all the API endpoints available in the Trivias API.
 
+> ⚠️ **IMPORTANT**: All API routes use the prefix `/api/v1`
+> 
+> **Base URL**: `http://localhost:3000/api/v1`
+> 
+> Example: `POST http://localhost:3000/api/v1/auth/register`
+
 ## Authentication
 
 ### POST /auth/register

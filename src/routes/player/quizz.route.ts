@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   getQuizzes,
+  getQuizById,
   playQuiz,
 } from "@controllers/player/quizzPlayer.controller";
 import { authenticateJWT } from "@middlewares/auth.middleware";
@@ -58,6 +59,37 @@ router.use(authenticateJWT);
  *         description: Unauthorized.
  */
 router.get("/", getQuizzes);
+
+/**
+ * @swagger
+ * /player/quizz/{id}:
+ *   get:
+ *     tags:
+ *       - Player
+ *     summary: Get a quiz by ID
+ *     description: Retrieves a single quiz with its questions and options (without showing correct answers).
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the quiz to retrieve.
+ *     responses:
+ *       '200':
+ *         description: The quiz object with questions and options.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Quiz'
+ *       '401':
+ *         description: Unauthorized.
+ *       '404':
+ *         description: Quiz not found.
+ */
+router.get("/:id", getQuizById);
 
 /**
  * @swagger

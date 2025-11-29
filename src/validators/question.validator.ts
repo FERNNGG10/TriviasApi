@@ -3,16 +3,16 @@ import prisma from "@config/database";
 
 export const createQuestionValidator = [
   body("question").notEmpty().withMessage("Question text is required"),
-  body("quizzId")
+  body("quizId")
     .isInt()
-    .withMessage("Quizz ID must be an integer")
-    .custom(async (quizzId: number) => {
-      if (!quizzId) return true;
-      const quizz = await prisma.quizzes.findUnique({
-        where: { id: quizzId },
+    .withMessage("Quiz ID must be an integer")
+    .custom(async (quizId: number) => {
+      if (!quizId) return true;
+      const quiz = await prisma.quizzes.findUnique({
+        where: { id: quizId },
       });
-      if (!quizz) {
-        throw new Error("Quizz ID does not exist");
+      if (!quiz) {
+        throw new Error("Quiz ID does not exist");
       }
     }),
   body("questionType")
@@ -25,17 +25,17 @@ export const updateQuestionValidator = [
     .optional()
     .notEmpty()
     .withMessage("Question text is required"),
-  body("quizzId")
+  body("quizId")
     .optional()
     .isInt()
-    .withMessage("Quizz ID must be an integer")
-    .custom(async (quizzId: number) => {
-      if (!quizzId) return true;
-      const quizz = await prisma.quizzes.findUnique({
-        where: { id: quizzId },
+    .withMessage("Quiz ID must be an integer")
+    .custom(async (quizId: number) => {
+      if (!quizId) return true;
+      const quiz = await prisma.quizzes.findUnique({
+        where: { id: quizId },
       });
-      if (!quizz) {
-        throw new Error("Quizz ID does not exist");
+      if (!quiz) {
+        throw new Error("Quiz ID does not exist");
       }
       return true;
     }),

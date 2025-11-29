@@ -2,6 +2,7 @@ import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import passport from "passport";
 import prisma from "@config/database";
+import { User } from "src/generated/prisma";
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -13,15 +14,12 @@ passport.use(
     try {
       const user = await prisma.user.findUnique({
         where: { id: payload.id },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          role: { select: { name: true } },
+        include: {
+          role: true, // Incluir el rol del usuario
         },
       });
       if (user) {
-        return done(null, user);
+        return done(null, user as User);
       } else {
         return done(null, false);
       }
@@ -45,15 +43,6 @@ passport.use(
             email: profile.emails?.[0]?.value || "",
             provider: "google",
           },
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            provider: true,
-            providerId: true,
-            status: true,
-            role: { select: { name: true } },
-          },
         });
         if (user) {
           if (user.status === false) {
@@ -66,20 +55,11 @@ passport.use(
                 provider: "google",
                 providerId: profile.id,
               },
-              select: {
-                id: true,
-                name: true,
-                email: true,
-                provider: true,
-                providerId: true,
-                status: true,
-                role: { select: { name: true } },
-              },
             });
           }
-          return done(null, user);
+          return done(null, user as User);
         } else {
-          user = await prisma.user.create({
+          const newUser = await prisma.user.create({
             data: {
               name:
                 profile.displayName ||
@@ -91,17 +71,8 @@ passport.use(
               roleId: 2,
               password: null,
             },
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              provider: true,
-              providerId: true,
-              status: true,
-              role: { select: { name: true } },
-            },
           });
-          return done(null, user);
+          return done(null, newUser as User);
         }
       } catch (error) {
         return done(error, false);

@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "ts-node": {
+    "transpileOnly": false,
+    "files": true,
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
+}

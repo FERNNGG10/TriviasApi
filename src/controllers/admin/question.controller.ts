@@ -25,7 +25,7 @@ export const getById = async (req: Request, res: Response) => {
 };
 
 export const create = async (req: Request, res: Response) => {
-  const questionData = req.body as QuestionRequest;
+  const { quizId, question: questionText, questionType } = req.body;
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -33,24 +33,40 @@ export const create = async (req: Request, res: Response) => {
       .status(422)
       .json({ message: "Validation errors", errors: errors.array() });
   }
+  
   const question = await prisma.question.create({
-    data: questionData,
+    data: {
+      question: questionText,
+      questionType,
+      quiz: {
+        connect: { id: quizId }
+      }
+    },
   });
   return res.status(201).json({ question });
 };
 
 export const update = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const questionData = req.body as QuestionUpdate;
+  const { quizId, question: questionText, questionType } = req.body;
+  
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res
       .status(422)
       .json({ message: "Validation errors", errors: errors.array() });
   }
+  
+  const updateData: any = {};
+  if (questionText !== undefined) updateData.question = questionText;
+  if (questionType !== undefined) updateData.questionType = questionType;
+  if (quizId !== undefined) {
+    updateData.quiz = { connect: { id: quizId } };
+  }
+  
   const question = await prisma.question.update({
     where: { id },
-    data: questionData,
+    data: updateData,
   });
   return res.status(200).json({ question });
 };
