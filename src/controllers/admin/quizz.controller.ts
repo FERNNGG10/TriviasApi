@@ -191,6 +191,25 @@ export const createQuizzWithQuestionsAndAnswers = async (
         },
       },
     });
+
+    // Send push notification to all subscribed users
+    const { sendPushToAllSubscriptions } = await import("@services/push-notification.service");
+    const payload = JSON.stringify({
+      title: "¡Nueva Trivia Disponible!",
+      body: `${quizz.title} - ${quizz.description}`,
+      icon: "/assets/icons/icon-192x192.png",
+      badge: "/assets/icons/icon-96x96.png",
+      data: {
+        url: "/",
+        quizId: quizz.id,
+      },
+    });
+
+    // Send notifications asynchronously without blocking the response
+    sendPushToAllSubscriptions(payload).catch((error) => {
+      console.error("Error sending push notifications:", error);
+    });
+
     return res.status(201).json({ quizz });
   } catch (error) {
     console.error("Database error:", error);

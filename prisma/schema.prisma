@@ -37,6 +37,7 @@ model User {
   createdAt  DateTime     @default(now())
   Quizzes    Quizzes[]
   QuizScores QuizScores[]
+  PushSubscriptions PushSubscription[]
 
   @@unique([provider, providerId])
 }
@@ -95,4 +96,16 @@ model QuizScores {
   quiz      Quizzes  @relation(fields: [quizId], references: [id], onDelete: Cascade)
   score     Int
   createdAt DateTime @default(now())
+}
+
+model PushSubscription {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique @db.Text()
+  p256dh    String   @db.Text()
+  auth      String   @db.Text()
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
