@@ -44,7 +44,7 @@ export const sendPushToAllSubscriptions = async (
   const subscriptions = await prisma.pushSubscription.findMany();
 
   const results = await Promise.allSettled(
-    subscriptions.map(async (sub) => {
+    subscriptions.map(async (sub:any) => {
       const subscription: PushSubscriptionData = {
         endpoint: sub.endpoint,
         keys: {

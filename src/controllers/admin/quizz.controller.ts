@@ -86,14 +86,17 @@ export const create = async (req: Request, res: Response) => {
   // Send push notification to all subscribed users
   const { sendPushToAllSubscriptions } = await import("@services/push-notification.service");
   const payload = JSON.stringify({
-    title: "¡Nueva Trivia Disponible!",
-    body: `${quizz.title} - ${quizz.description}`,
-    icon: "/assets/icons/icon-192x192.png",
-    badge: "/assets/icons/icon-96x96.png",
-    data: {
-      url: "/",
-      quizId: quizz.id,
-    },
+    notification: {
+      title: "¡Nueva Trivia Disponible!",
+      body: `${quizz.title} - ${quizz.description}`,
+      icon: "/assets/icons/icon-192x192.png",
+      badge: "/assets/icons/icon-96x96.png",
+      data: {
+        url: "/",
+        quizId: quizz.id,
+      },
+      vibrate: [100, 50, 100],
+    }
   });
 
   // Send notifications asynchronously without blocking the response
@@ -160,14 +163,17 @@ export const createQuizzWithQuestions = async (req: Request, res: Response) => {
     // Send push notification to all subscribed users
     const { sendPushToAllSubscriptions } = await import("@services/push-notification.service");
     const payload = JSON.stringify({
-      title: "¡Nueva Trivia Disponible!",
-      body: `${quizz.title} - ${quizz.description}`,
-      icon: "/assets/icons/icon-192x192.png",
-      badge: "/assets/icons/icon-96x96.png",
-      data: {
-        url: "/",
-        quizId: quizz.id,
-      },
+      notification: {
+        title: "¡Nueva Trivia Disponible!",
+        body: `${quizz.title} - ${quizz.description}`,
+        icon: "/assets/icons/icon-192x192.png",
+        badge: "/assets/icons/icon-96x96.png",
+        data: {
+          url: "/",
+          quizId: quizz.id,
+        },
+        vibrate: [100, 50, 100],
+      }
     });
 
     // Send notifications asynchronously without blocking the response
@@ -233,14 +239,17 @@ export const createQuizzWithQuestionsAndAnswers = async (
     // Send push notification to all subscribed users
     const { sendPushToAllSubscriptions } = await import("@services/push-notification.service");
     const payload = JSON.stringify({
-      title: "¡Nueva Trivia Disponible!",
-      body: `${quizz.title} - ${quizz.description}`,
-      icon: "/assets/icons/icon-192x192.png",
-      badge: "/assets/icons/icon-96x96.png",
-      data: {
-        url: "/",
-        quizId: quizz.id,
-      },
+      notification: {
+        title: "¡Nueva Trivia Disponible!",
+        body: `${quizz.title} - ${quizz.description}`,
+        icon: "/assets/icons/icon-192x192.png",
+        badge: "/assets/icons/icon-96x96.png",
+        data: {
+          url: "/",
+          quizId: quizz.id,
+        },
+        vibrate: [100, 50, 100],
+      }
     });
 
     // Send notifications asynchronously without blocking the response
