@@ -52,7 +52,7 @@ class EmailService {
     } catch (error: any) {
       console.error("❌ Error sending email via SendGrid:", error);
       if (error.response) {
-        console.error(error.response.body);
+        console.error("🔍 SendGrid Error Body:", JSON.stringify(error.response.body, null, 2));
       }
       throw error;
     }
