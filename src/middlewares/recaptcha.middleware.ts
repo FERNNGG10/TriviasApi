@@ -12,6 +12,13 @@ export const verifyRecaptcha = async (
 ) => {
   try {
     const recaptchaToken = req.body.recaptchaToken;
+    const isBiometric = req.body.isBiometric;
+
+    // Si es login biométrico, permitimos pasar sin token
+    if (isBiometric === true) {
+      console.log("✅ Skipping reCAPTCHA for biometric login");
+      return next();
+    }
 
     if (!recaptchaToken) {
       return res.status(400).json({
