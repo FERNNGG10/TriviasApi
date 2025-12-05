@@ -17,6 +17,16 @@ class EmailService {
   }
 
   async sendOTP(email: string, code: string): Promise<void> {
+    console.log("📧 Attempting to send email to:", email);
+    console.log("📧 Config:", {
+      host: config.email.host,
+      port: config.email.port,
+      secure: config.email.secure,
+      user: config.email.user,
+      pass: config.email.password ? "****" : "MISSING",
+      from: config.email.from
+    });
+
     const mailOptions = {
       from: config.email.from,
       to: email,

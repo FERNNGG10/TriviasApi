@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   registerController,
   loginController,
+  verifyLoginOtpController,
   googleCallback,
 } from "@controllers/auth/auth.controller";
 import {
@@ -80,6 +81,7 @@ router.post(
  *               $ref: '#/components/schemas/Error'
  */
 router.post("/login", verifyRecaptchaOptional, loginValidator, loginController);
+router.post("/login/verify-otp", verifyLoginOtpController);
 
 /**
  * @swagger

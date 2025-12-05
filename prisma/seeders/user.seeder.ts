@@ -5,21 +5,21 @@ export const userSeeder = async (prisma: PrismaClient) => {
   const users = [
     {
       name: "Fernando Admin",
-      email: "fernando@gmail.com",
+      email: "fgolmos10@gmail.com",
       password: await bcrypt.hash("admin123", 10),
       roleId: 1,
       status: true,
     },
     {
       name: "Miguel Admin",
-      email: "miguel@gmail.com",
+      email: "miguelvillalpando19@gmail.com",
       password: await bcrypt.hash("admin123", 10),
       roleId: 1,
       status: true,
     },
     {
       name: "Laura Player",
-      email: "laura@gmail.com",
+      email: "fernando.g.olmos10@gmail.com",
       password: await bcrypt.hash("player123", 10),
       roleId: 2,
       status: true,

@@ -81,6 +81,41 @@ export const loginController = async (req: Request, res: Response) => {
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
+  // Generar y enviar OTP
+  try {
+    await otpService.generateAndSendOTP(user.email);
+    
+    return res.json({
+      message: "OTP sent successfully",
+      requireOtp: true,
+      email: user.email
+    });
+  } catch (error) {
+    console.error("Error sending OTP:", error);
+    return res.status(500).json({ message: "Error sending OTP code" });
+  }
+};
+
+export const verifyLoginOtpController = async (req: Request, res: Response) => {
+  const { email, otpCode } = req.body;
+
+  if (!email || !otpCode) {
+    return res.status(400).json({ message: "Email and OTP code are required" });
+  }
+
+  // Verificar OTP
+  const isOtpValid = await otpService.verifyOTP(email, otpCode);
+  if (!isOtpValid) {
+    return res.status(400).json({ message: "Invalid or expired OTP code" });
+  }
+
+  // Buscar usuario
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  // Generar Token
   const accessToken = jwt.sign(
     {
       id: user.id,

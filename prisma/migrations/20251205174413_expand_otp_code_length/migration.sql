@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "public"."OTP" ALTER COLUMN "code" SET DATA TYPE VARCHAR(255);

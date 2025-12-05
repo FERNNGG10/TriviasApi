@@ -35,6 +35,10 @@ export const verifyRecaptcha = async (
 
     // Verificar que la verificación fue exitosa
     if (!success) {
+      console.error("❌ reCAPTCHA Failed:", JSON.stringify(response.data, null, 2));
+      console.error("🔑 Used Secret (last 4):", config.recaptcha.secretKey.slice(-4));
+      console.error("🎟️ Received Token (first 10):", recaptchaToken.substring(0, 10));
+      
       return res.status(400).json({
         message: "reCAPTCHA verification failed",
         details: response.data["error-codes"],

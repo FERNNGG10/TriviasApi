@@ -5,6 +5,7 @@ export const categorySeeder = async (prisma: PrismaClient) => {
     { name: "Science" },
     { name: "History" },
     { name: "Programming" },
+    { name: "Geography" },
   ];
   for (const category of categories) {
     await prisma.category.upsert({

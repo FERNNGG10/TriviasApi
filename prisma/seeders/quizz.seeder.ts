@@ -16,6 +16,20 @@ export const quizzSeeder = async (prisma: PrismaClient) => {
       description: "A quiz about history.",
       difficulty: "medium",
     },
+    {
+      userId: 1,
+      categoryId: 3, // Assuming category 3 exists or will be created
+      title: "General Knowledge",
+      description: "Test your general knowledge.",
+      difficulty: "easy",
+    },
+    {
+      userId: 2,
+      categoryId: 4, // Assuming category 4 exists or will be created
+      title: "Geography Challenge",
+      description: "How well do you know the world?",
+      difficulty: "hard",
+    },
   ];
   for (const quizz of quizzes) {
     await prisma.quizzes.upsert({

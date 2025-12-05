@@ -2,6 +2,7 @@ import otpGenerator from "otp-generator";
 import prisma from "@config/database";
 import config from "@config/config";
 import emailService from "./email.service";
+import bcrypt from "bcrypt";
 
 class OTPService {
   /**
@@ -33,11 +34,14 @@ class OTPService {
       },
     });
 
-    // Guardar nuevo código OTP en la base de datos
+    // Hash del código OTP
+    const hashedCode = await bcrypt.hash(code, 10);
+
+    // Guardar nuevo código OTP en la base de datos (hasheado)
     await prisma.oTP.create({
       data: {
         email,
-        code,
+        code: hashedCode,
         expiresAt,
       },
     });
@@ -50,24 +54,41 @@ class OTPService {
    * Verifica si un código OTP es válido
    */
   async verifyOTP(email: string, code: string): Promise<boolean> {
-    const otp = await prisma.oTP.findFirst({
+    const otps = await prisma.oTP.findMany({
       where: {
         email,
-        code,
         verified: false,
         expiresAt: {
           gt: new Date(), // Mayor que la fecha actual (no expirado)
         },
       },
+      orderBy: {
+        createdAt: 'desc'
+      }
     });
 
-    if (!otp) {
+    if (!otps || otps.length === 0) {
+      return false;
+    }
+
+    // Verificar el código contra los hashes encontrados (empezando por el más reciente)
+    let validOtpId = null;
+
+    for (const otp of otps) {
+      const isValid = await bcrypt.compare(code, otp.code);
+      if (isValid) {
+        validOtpId = otp.id;
+        break;
+      }
+    }
+
+    if (!validOtpId) {
       return false;
     }
 
     // Marcar el OTP como verificado
     await prisma.oTP.update({
-      where: { id: otp.id },
+      where: { id: validOtpId },
       data: { verified: true },
     });
 
