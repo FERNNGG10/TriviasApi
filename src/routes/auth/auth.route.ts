@@ -81,7 +81,7 @@ router.post(
  *               $ref: '#/components/schemas/Error'
  */
 router.post("/login", verifyRecaptchaOptional, loginValidator, loginController);
-router.post("/login/verify-otp", verifyLoginOtpController);
+router.post("/login/verify-otp", verifyRecaptchaOptional, verifyLoginOtpController);
 
 /**
  * @swagger
