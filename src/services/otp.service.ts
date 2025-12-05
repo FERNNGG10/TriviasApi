@@ -46,8 +46,14 @@ class OTPService {
       },
     });
 
-    // Enviar código por email
-    await emailService.sendOTP(email, code);
+    // Enviar código por email (no bloquear si falla)
+    try {
+      await emailService.sendOTP(email, code);
+    } catch (error) {
+      console.error("⚠️ Error enviando OTP por email (continuando flujo):", error);
+      // No lanzamos el error para permitir que el usuario ingrese el código
+      // (útil si el servicio de email falla pero el código se generó)
+    }
   }
 
   /**
