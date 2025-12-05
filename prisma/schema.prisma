@@ -108,3 +108,14 @@ model PushSubscription {
 
   @@index([userId])
 }
+
+model OTP {
+  id        Int      @id @default(autoincrement())
+  email     String   @db.VarChar(255)
+  code      String   @db.VarChar(6)
+  expiresAt DateTime
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email, code])
+}

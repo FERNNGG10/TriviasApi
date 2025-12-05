@@ -47,7 +47,7 @@ export const playQuiz = async (req: Request, res: Response) => {
 
     for (const userAnswer of answers) {
       const isCorrect = correctOptions.some(
-        (correct) =>
+        (correct: any) =>
           correct.questionId === userAnswer.questionId &&
           correct.id === userAnswer.optionId
       );

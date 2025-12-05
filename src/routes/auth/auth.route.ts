@@ -4,8 +4,14 @@ import {
   loginController,
   googleCallback,
 } from "@controllers/auth/auth.controller";
+import {
+  requestOTP,
+  verifyOTP,
+  checkOTP,
+} from "@controllers/auth/otp.controller";
 import { registerValidator, loginValidator } from "@validators/auth.validator";
 import { authenticateJWT } from "@middlewares/auth.middleware";
+import { verifyRecaptcha, verifyRecaptchaOptional } from "@middlewares/recaptcha.middleware";
 import passport from "passport";
 
 const router = Router();
@@ -38,7 +44,12 @@ const router = Router();
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post("/register", registerValidator, registerController);
+router.post(
+  "/register",
+  verifyRecaptchaOptional,
+  registerValidator,
+  registerController
+);
 
 /**
  * @swagger
@@ -68,7 +79,7 @@ router.post("/register", registerValidator, registerController);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post("/login", loginValidator, loginController);
+router.post("/login", verifyRecaptchaOptional, loginValidator, loginController);
 
 /**
  * @swagger
@@ -165,5 +176,86 @@ router.get("/google/failure", (req, res) => {
     message: "Google authentication failed",
   });
 });
+
+// OTP Routes
+/**
+ * @swagger
+ * /auth/otp/request:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Request OTP code
+ *     description: Sends a 6-digit OTP code to the specified email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               recaptchaToken:
+ *                 type: string
+ *               purpose:
+ *                 type: string
+ *                 enum: [register, login]
+ *     responses:
+ *       '200':
+ *         description: OTP sent successfully
+ *       '400':
+ *         description: Bad request
+ */
+router.post("/otp/request", verifyRecaptchaOptional, requestOTP);
+
+/**
+ * @swagger
+ * /auth/otp/verify:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Verify OTP code
+ *     description: Verifies if the provided OTP code is valid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               code:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: OTP verified successfully
+ *       '400':
+ *         description: Invalid or expired OTP
+ */
+router.post("/otp/verify", verifyOTP);
+
+/**
+ * @swagger
+ * /auth/otp/check:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Check if valid OTP exists
+ *     description: Checks if there is a valid OTP for the email without consuming it
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Returns whether a valid OTP exists
+ */
+router.post("/otp/check", checkOTP);
 
 export default router;

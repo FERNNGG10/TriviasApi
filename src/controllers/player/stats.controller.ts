@@ -26,20 +26,20 @@ export const getPlayerStats = async (req: Request, res: Response) => {
 
     // Calcular estadísticas
     const totalQuizzesPlayed = playerScores.length;
-    const totalScore = playerScores.reduce((sum, score) => sum + score.score, 0);
+    const totalScore = playerScores.reduce((sum: number, score: any) => sum + score.score, 0);
     const averageScore =
       totalQuizzesPlayed > 0 ? Math.round(totalScore / totalQuizzesPlayed) : 0;
 
     // Encontrar el mejor puntaje
     const bestScore =
       playerScores.length > 0
-        ? Math.max(...playerScores.map((s) => s.score))
+        ? Math.max(...playerScores.map((s: any) => s.score))
         : 0;
 
     // Encontrar el peor puntaje
     const worstScore =
       playerScores.length > 0
-        ? Math.min(...playerScores.map((s) => s.score))
+        ? Math.min(...playerScores.map((s: any) => s.score))
         : 0;
 
     // Puntajes por categoría
@@ -48,7 +48,7 @@ export const getPlayerStats = async (req: Request, res: Response) => {
       { total: number; count: number; average: number }
     > = {};
 
-    playerScores.forEach((score) => {
+    playerScores.forEach((score: any) => {
       const categoryName = score.quiz.category.name;
       if (!scoresByCategory[categoryName]) {
         scoresByCategory[categoryName] = { total: 0, count: 0, average: 0 };
@@ -66,7 +66,7 @@ export const getPlayerStats = async (req: Request, res: Response) => {
     });
 
     // Últimos 5 quizzes jugados
-    const recentQuizzes = playerScores.slice(0, 5).map((score) => ({
+    const recentQuizzes = playerScores.slice(0, 5).map((score: any) => ({
       quizId: score.quizId,
       quizTitle: score.quiz.title,
       categoryName: score.quiz.category.name,
@@ -76,7 +76,7 @@ export const getPlayerStats = async (req: Request, res: Response) => {
 
     // Total de categorías jugadas
     const categoriesPlayed = new Set(
-      playerScores.map((s) => s.quiz.categoryId)
+      playerScores.map((s: any) => s.quiz.categoryId)
     ).size;
 
     return res.status(200).json({
@@ -118,7 +118,7 @@ export const getPlayerHistory = async (req: Request, res: Response) => {
       },
     });
 
-    const formattedHistory = history.map((score) => ({
+    const formattedHistory = history.map((score: any) => ({
       id: score.id,
       quizId: score.quizId,
       quizTitle: score.quiz.title,

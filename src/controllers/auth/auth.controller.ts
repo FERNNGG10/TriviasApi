@@ -4,9 +4,13 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { UserRequest } from "@interfaces/user.interface";
 import { validationResult } from "express-validator";
+import otpService from "@services/otp.service";
+import emailService from "@services/email.service";
 
 export const registerController = async (req: Request, res: Response) => {
   const userData = req.body as UserRequest;
+  const { otpCode } = req.body;
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res
@@ -16,6 +20,19 @@ export const registerController = async (req: Request, res: Response) => {
   if (!userData.password) {
     return res.status(422).json({ message: "Password is required" });
   }
+
+  // Verificar OTP (solo en producción o si se proporciona)
+  if (otpCode) {
+    const isOTPValid = await otpService.verifyOTP(userData.email, otpCode);
+    if (!isOTPValid) {
+      return res.status(400).json({ message: "Invalid or expired OTP code" });
+    }
+  } else if (process.env.NODE_ENV === "production") {
+    // En producción, requerir OTP obligatoriamente
+    return res.status(400).json({ message: "OTP code is required" });
+  }
+
+  // Crear usuario
   const user = await prisma.user.create({
     data: {
       ...userData,
@@ -29,6 +46,16 @@ export const registerController = async (req: Request, res: Response) => {
       role: true,
     },
   });
+
+  // Enviar email de bienvenida (solo si el servicio de email está configurado)
+  if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+    try {
+      await emailService.sendWelcomeEmail(user.email, user.name);
+    } catch (error) {
+      console.log("⚠️ No se pudo enviar email de bienvenida:", error);
+    }
+  }
+
   return res
     .status(201)
     .json({ message: "User registered successfully", user });
