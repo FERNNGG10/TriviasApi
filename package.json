@@ -50,6 +50,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.16.2",
+    "@sendgrid/mail": "^8.1.6",
     "@types/web-push": "^3.6.4",
     "axios": "^1.13.2",
     "bcrypt": "^6.0.0",

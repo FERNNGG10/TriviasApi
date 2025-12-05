@@ -8,11 +8,7 @@ const config = {
     secretKey: process.env.RECAPTCHA_SECRET_KEY || "",
   },
   email: {
-    host: process.env.EMAIL_HOST || "smtp.gmail.com",
-    port: parseInt(process.env.EMAIL_PORT || "587"),
-    secure: process.env.EMAIL_SECURE === "true",
-    user: process.env.EMAIL_USER || "",
-    password: process.env.EMAIL_PASSWORD || "",
+    sendgridApiKey: process.env.SENDGRID_API_KEY || "",
     from: process.env.EMAIL_FROM || "",
   },
   otp: {
