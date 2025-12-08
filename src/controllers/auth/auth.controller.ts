@@ -86,7 +86,8 @@ export const loginController = async (req: Request, res: Response) => {
     return res.json({
       message: "OTP sent successfully",
       requireOtp: true,
-      email: user.email
+      email: user.email,
+      admin: user.roleId === 1,
     });
   } catch (error) {
     console.error("Error sending OTP:", error);
