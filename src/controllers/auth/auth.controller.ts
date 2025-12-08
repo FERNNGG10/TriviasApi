@@ -32,7 +32,8 @@ export const registerController = async (req: Request, res: Response) => {
   // Crear usuario
   const user = await prisma.user.create({
     data: {
-      ...userData,
+      name: userData.name,
+      email: userData.email,
       roleId: 2,
       password: await bcrypt.hash(userData.password, 10),
     },

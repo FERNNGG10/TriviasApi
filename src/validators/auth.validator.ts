@@ -22,8 +22,11 @@ export const registerValidator = [
     }),
   body("password")
     .notEmpty()
+    .withMessage("Password is required")
     .isLength({ min: 8 })
-    .withMessage("Password is required and must be at least 8 characters long"),
+    .withMessage("Password must be at least 8 characters long")
+    .matches(/^(?=.*[A-Z])(?=.*\d)/)
+    .withMessage("Password must contain at least one uppercase letter and one number"),
 ];
 
 export const loginValidator = [
