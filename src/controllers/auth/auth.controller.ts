@@ -21,15 +21,12 @@ export const registerController = async (req: Request, res: Response) => {
     return res.status(422).json({ message: "Password is required" });
   }
 
-  // Verificar OTP (solo en producción o si se proporciona)
+  // Verificar OTP si se proporciona (opcional para registro)
   if (otpCode) {
     const isOTPValid = await otpService.verifyOTP(userData.email, otpCode);
     if (!isOTPValid) {
       return res.status(400).json({ message: "Invalid or expired OTP code" });
     }
-  } else if (process.env.NODE_ENV === "production") {
-    // En producción, requerir OTP obligatoriamente
-    return res.status(400).json({ message: "OTP code is required" });
   }
 
   // Crear usuario
