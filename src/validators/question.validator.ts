@@ -16,8 +16,21 @@ export const createQuestionValidator = [
       }
     }),
   body("questionType")
+    .optional()
     .isIn(["multiple_choice", "true_false"])
     .withMessage("Invalid question type"),
+  body("options")
+    .optional()
+    .isArray()
+    .withMessage("Options must be an array"),
+  body("options.*.text")
+    .optional()
+    .notEmpty()
+    .withMessage("Option text is required"),
+  body("options.*.isCorrect")
+    .optional()
+    .isBoolean()
+    .withMessage("isCorrect must be a boolean"),
 ];
 
 export const updateQuestionValidator = [

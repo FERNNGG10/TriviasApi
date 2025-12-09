@@ -25,7 +25,7 @@ export const getById = async (req: Request, res: Response) => {
 };
 
 export const create = async (req: Request, res: Response) => {
-  const { quizId, question: questionText, questionType } = req.body;
+  const { quizId, question: questionText, questionType, options } = req.body;
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -34,14 +34,27 @@ export const create = async (req: Request, res: Response) => {
       .json({ message: "Validation errors", errors: errors.array() });
   }
   
+  // Crear pregunta con opciones en una transacción
   const question = await prisma.question.create({
     data: {
       question: questionText,
-      questionType,
+      questionType: questionType || 'multiple_choice',
       quiz: {
         connect: { id: quizId }
-      }
+      },
+      // Si se proporcionan opciones, crearlas junto con la pregunta
+      ...(options && options.length > 0 && {
+        Options: {
+          create: options.map((opt: { text: string; isCorrect: boolean }) => ({
+            text: opt.text,
+            isCorrect: opt.isCorrect
+          }))
+        }
+      })
     },
+    include: {
+      Options: true
+    }
   });
   return res.status(201).json({ question });
 };
